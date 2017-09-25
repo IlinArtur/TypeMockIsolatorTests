@@ -10,29 +10,6 @@ using TypeMock.ArrangeActAssert;
 
 namespace TypeMockIsolatorTests
 {
-    interface IPerson
-    {
-        string Name { get; set; }
-        IValue Value { get; set; }
-    }
-
-    public interface IValue
-    {
-        void DoValue();
-    }
-
-    class StaticClass
-    {
-        public void DoSomething()
-        {
-            throw new Exception("Do Something else :)");
-        }
-
-        public static void ExecuteQuery()
-        {
-            throw new NotImplementedException();
-        }
-    }
 
     [TestFixture]
     [Category("Learning Isolator")]
@@ -91,42 +68,6 @@ namespace TypeMockIsolatorTests
             Action addingPerson = () => adoNetDependency.AddPerson();
 
             addingPerson.ShouldNotThrow<Exception>();
-        }
-    }
-
-    internal class AdoNetDependency
-    {
-        public AdoNetDependency()
-        {
-        }
-
-        public void AddPerson()
-        {
-            var adoNet = new AdoNetClass("someConnectionstring");
-            adoNet.Execute();
-        }
-    }
-
-    internal class AdoNetClass
-    {
-        private string connectionString;
-
-        public AdoNetClass(string connectionString)
-        {
-            this.connectionString = connectionString;
-        }
-
-        public void Execute()
-        {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                using (var command = connection.CreateCommand())
-                {
-                    command.CommandText = "select 'artur', 'ilin', '1991-05-08' into #persons";
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-            }
         }
     }
 }
